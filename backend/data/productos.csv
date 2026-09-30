@@ -1,0 +1,9 @@
+id,nombre,categoria,unidad_medida,dias_caducidad_estimados,precio_referencia
+1,Arroz,Granos,kg,365,1.80
+2,Leche,Lácteos,l,10,1.25
+3,Huevos,Proteínas,unidad,28,0.25
+4,Pan,Panadería,unidad,5,0.80
+5,Frijoles,Granos,kg,365,2.10
+6,Tomate,Verduras,kg,7,1.50
+7,Aceite,Abarrotes,l,240,3.75
+8,Queso,Lácteos,kg,21,5.50

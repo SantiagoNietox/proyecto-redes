@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartPantry | Despensa Inteligente</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div><p class="eyebrow">REDES E INFRAESTRUCTURA</p><h1>SmartPantry</h1><p>Tu despensa, bajo control.</p></div>
+    <span id="connection" class="status">Conectando…</span>
+  </header>
+  <main>
+    <nav aria-label="Secciones">
+      <button class="tab active" data-view="despensa">Alacena</button>
+      <button class="tab" data-view="compras">Lista de compras</button>
+      <button class="tab" data-view="dashboard">Dashboard</button>
+    </nav>
+    <section id="despensa" class="panel">
+      <h2>Mi alacena</h2><p class="muted">Productos registrados y niveles de stock.</p>
+      <div id="pantry-list" class="cards"><p>Cargando productos…</p></div>
+    </section>
+    <section id="compras" class="panel hidden">
+      <h2>Checklist de compras</h2><p class="muted">Productos con stock igual o inferior al mínimo.</p>
+      <ul id="shopping-list" class="shopping-list"><li>Cargando lista…</li></ul>
+      <p id="budget" class="budget"></p>
+    </section>
+    <section id="dashboard" class="panel hidden">
+      <h2>Resumen de la despensa</h2>
+      <div class="metrics"><article><span>Presupuesto estimado</span><strong id="metric-budget">—</strong></article><article><span>Stock crítico</span><strong id="metric-critical">—</strong></article><article><span>Por vencer</span><strong id="metric-expiring">—</strong></article></div>
+      <h3>Productos próximos a vencer</h3><ul id="expiring-list"></ul>
+      <div class="chart-wrap"><canvas id="dashboard-chart" aria-label="Gráfico de métricas del dashboard"></canvas></div>
+    </section>
+  </main>
+  <footer>SmartPantry · Frontend conectado a una API desplegada en una VM independiente</footer>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Vagrant state and generated VM files
+.vagrant/
+
+# Python virtual environments, bytecode, and test caches
+backend/.venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local database and environment configuration
+backend/*.db
+backend/*.db-*
+.env
+.env.*
+!.env.example
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
