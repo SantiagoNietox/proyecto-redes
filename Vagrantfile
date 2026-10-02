@@ -16,10 +16,10 @@ Vagrant.configure("2") do |config|
       apt-get install -y python3 python3-venv python3-pip git curl ca-certificates
 
       cd /vagrant/backend
-      python3 -m venv .venv
-      .venv/bin/pip install --upgrade pip
-      .venv/bin/pip install -r requirements.txt
-      .venv/bin/python -m app.seed
+      python3 -m venv /home/vagrant/venv
+      /home/vagrant/venv/bin/pip install --upgrade pip
+      /home/vagrant/venv/bin/pip install -r /vagrant/backend/requirements.txt
+      /home/vagrant/venv/bin/python -m app.seed
 
       cat > /etc/systemd/system/smartpantry-api.service <<'UNIT'
       [Unit]
@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
       Type=simple
       WorkingDirectory=/vagrant/backend
       Environment=PYTHONUNBUFFERED=1
-      ExecStart=/vagrant/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+      ExecStart=/home/vagrant/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
       Restart=on-failure
       RestartSec=3
 
