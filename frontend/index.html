@@ -3,37 +3,322 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SmartPantry | Despensa Inteligente</title>
+  <title>SmartPantry | Gestión e Inventario Doméstico Inteligente</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <div><p class="eyebrow">REDES E INFRAESTRUCTURA</p><h1>SmartPantry</h1><p>Tu despensa, bajo control.</p></div>
-    <span id="connection" class="status">Conectando…</span>
+    <div class="header-main">
+      <p class="eyebrow">REDES E INFRAESTRUCTURA · PROYECTO DE CURSO</p>
+      <h1>SmartPantry</h1>
+      <p class="subtitle">Sistema de Gestión e Inventario Doméstico Inteligente</p>
+    </div>
+    
+    <div class="header-controls">
+      <!-- RF-06: Control de Acceso y Roles -->
+      <div class="role-selector" title="Selecciona el rol operativo">
+        <label for="role-select"><strong>Rol activo:</strong></label>
+        <select id="role-select">
+          <option value="admin">👑 Administrador (Jefe de Hogar)</option>
+          <option value="operativo">🛒 Miembro del Hogar (Comprador)</option>
+        </select>
+      </div>
+      <span id="connection" class="status">Conectando…</span>
+    </div>
   </header>
+
+  <!-- Banner informativo de rol activo (RF-06, Sección 3) -->
+  <aside id="role-banner" class="role-banner">
+    <span class="role-icon" id="role-banner-icon">👑</span>
+    <span id="role-banner-text">Perfil Administrador: Configuración de inventario base, definición de umbrales de reabastecimiento y parametrización analítica.</span>
+  </aside>
+
   <main>
     <nav aria-label="Secciones">
-      <button class="tab active" data-view="despensa">Alacena</button>
-      <button class="tab" data-view="compras">Lista de compras</button>
-      <button class="tab" data-view="dashboard">Dashboard</button>
+      <button class="tab active" data-view="despensa">📦 Mi Alacena</button>
+      <button class="tab" data-view="compras">🛒 Modo Mercado <span id="badge-compras-count" class="tab-badge">0</span></button>
+      <button class="tab" data-view="dashboard">📊 Dashboard Analítico</button>
+      <button class="tab" data-view="catalogo">📑 Catálogo Base (60)</button>
     </nav>
+
+    <!-- ================= SECCIÓN 1: DESPENSA ================= -->
     <section id="despensa" class="panel">
-      <h2>Mi alacena</h2><p class="muted">Productos registrados y niveles de stock.</p>
-      <div id="pantry-list" class="cards"><p>Cargando productos…</p></div>
+      <div class="panel-header">
+        <div>
+          <h2>Inventario Doméstico</h2>
+          <p class="muted">Existencias en tiempo real con semaforización de estado y alertas de caducidad.</p>
+        </div>
+        <!-- RF-02 / 3.1: Agregar productos desde el frontend -->
+        <button id="btn-open-add-modal" class="btn btn-primary admin-only">
+          ➕ Registrar en Despensa
+        </button>
+      </div>
+
+      <!-- Filtros y buscador -->
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <input type="text" id="pantry-search" placeholder="🔍 Buscar por nombre o categoría…" autocomplete="off">
+        </div>
+        <div class="status-filters">
+          <button class="filter-btn active" data-filter="all">Todos (<span id="count-all">0</span>)</button>
+          <button class="filter-btn filter-optimo" data-filter="optimo">Óptimo (<span id="count-optimo">0</span>)</button>
+          <button class="filter-btn filter-critico" data-filter="critico">Crítico (<span id="count-critico">0</span>)</button>
+          <button class="filter-btn filter-agotado" data-filter="agotado">Agotado (<span id="count-agotado">0</span>)</button>
+        </div>
+      </div>
+
+      <div id="pantry-list" class="cards">
+        <p class="loading-state">Cargando existencias…</p>
+      </div>
     </section>
+
+    <!-- ================= SECCIÓN 2: MODO MERCADO (LISTA DE COMPRAS) ================= -->
     <section id="compras" class="panel hidden">
-      <h2>Checklist de compras</h2><p class="muted">Productos con stock igual o inferior al mínimo.</p>
-      <ul id="shopping-list" class="shopping-list"><li>Cargando lista…</li></ul>
-      <p id="budget" class="budget"></p>
+      <div class="panel-header">
+        <div>
+          <h2>Checklist de Abastecimiento ("Modo Mercado")</h2>
+          <p class="muted">Lista interactiva generada dinámicamente según umbrales mínimos de stock (RN-01, RF-03).</p>
+        </div>
+        <div class="compras-actions">
+          <button id="btn-select-all" class="btn btn-secondary">Seleccionar todos</button>
+        </div>
+      </div>
+
+      <div id="shopping-container" class="shopping-layout">
+        <div class="shopping-items-wrap">
+          <ul id="shopping-list" class="shopping-list">
+            <li class="loading-state">Cargando lista de compras…</li>
+          </ul>
+        </div>
+
+        <!-- Tarjeta de consolidación y presupuesto (RN-02, RN-03, RF-04) -->
+        <aside class="checkout-card">
+          <h3>Resumen de la Remesa</h3>
+          <div class="checkout-row">
+            <span>Ítems faltantes:</span>
+            <strong id="checkout-total-items">0</strong>
+          </div>
+          <div class="checkout-row">
+            <span>Ítems seleccionados en carrito:</span>
+            <strong id="checkout-selected-items">0</strong>
+          </div>
+          <div class="checkout-row highlight">
+            <span>Presupuesto total estimado:</span>
+            <strong id="checkout-budget-total">$ 0</strong>
+          </div>
+          <div class="checkout-row subtotal">
+            <span>Total seleccionado a comprar:</span>
+            <strong id="checkout-budget-selected">$ 0</strong>
+          </div>
+
+          <p class="checkout-hint">
+            💡 En tienda física, marca las casillas de lo que tomes en tu carrito y consolida la compra para auto-incrementar existencias en la base de datos (RN-03).
+          </p>
+
+          <button id="btn-consolidar-compra" class="btn btn-success btn-block" disabled>
+            🛒 Consolidar Compra / Cierre de Remesa
+          </button>
+        </aside>
+      </div>
     </section>
+
+    <!-- ================= SECCIÓN 3: DASHBOARD ANALÍTICO ================= -->
     <section id="dashboard" class="panel hidden">
-      <h2>Resumen de la despensa</h2>
-      <div class="metrics"><article><span>Presupuesto estimado</span><strong id="metric-budget">—</strong></article><article><span>Stock crítico</span><strong id="metric-critical">—</strong></article><article><span>Por vencer</span><strong id="metric-expiring">—</strong></article></div>
-      <h3>Productos próximos a vencer</h3><ul id="expiring-list"></ul>
-      <div class="chart-wrap"><canvas id="dashboard-chart" aria-label="Gráfico de métricas del dashboard"></canvas></div>
+      <div class="panel-header">
+        <div>
+          <h2>Dashboard Analítico de Consumo y Costos</h2>
+          <p class="muted">Métricas agregadas, distribución de gasto, rotación y alertas predictivas (RF-05, RN-04).</p>
+        </div>
+        <button id="btn-refresh-dashboard" class="btn btn-secondary" title="Actualizar datos">🔄 Refrescar</button>
+      </div>
+
+      <!-- Tarjetas de métricas agregadas -->
+      <div class="metrics">
+        <article class="metric-card">
+          <span>Presupuesto Estimado Remesa</span>
+          <strong id="metric-budget">—</strong>
+          <small>Inversión requerida para reponer faltantes (RN-02)</small>
+        </article>
+        <article class="metric-card">
+          <span>Stock Crítico</span>
+          <strong id="metric-critical" class="text-warning">—</strong>
+          <small>Existencias por debajo del umbral mínimo</small>
+        </article>
+        <article class="metric-card">
+          <span>Productos Agotados</span>
+          <strong id="metric-exhausted" class="text-danger">—</strong>
+          <small>Existencias en cero (0)</small>
+        </article>
+        <article class="metric-card">
+          <span>Alertas de Caducidad</span>
+          <strong id="metric-expiring" class="text-alert">—</strong>
+          <small>Vencimiento a ≤ 3 días (RN-04)</small>
+        </article>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Gráfico analítico de distribución de gasto por categoría (RF-05 / 3.1) -->
+        <article class="dashboard-widget">
+          <h3>Distribución de Presupuesto por Categoría</h3>
+          <p class="widget-desc">Gasto requerido por tipo de producto para completar la remesa.</p>
+          <div class="chart-container">
+            <canvas id="category-chart" width="480" height="220" aria-label="Gráfico de distribución por categoría"></canvas>
+          </div>
+          <div id="category-legend" class="category-legend"></div>
+        </article>
+
+        <!-- Semaforización de caducidades críticas (RN-04 / 3.1) -->
+        <article class="dashboard-widget">
+          <h3>Semaforización de Caducidades Críticas (≤ 3 días)</h3>
+          <p class="widget-desc">Algoritmo predictivo de vencimiento para priorización de consumo.</p>
+          <ul id="expiring-list" class="expiring-list">
+            <li>Cargando alertas…</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="dashboard-grid secondary">
+        <!-- Productos con mayor rotación / compras acumuladas (RF-05) -->
+        <article class="dashboard-widget">
+          <h3>Productos con Mayor Rotación</h3>
+          <p class="widget-desc">Insumos con mayor volumen acumulado en las remesas domésticas.</p>
+          <div id="rotation-list-wrap">
+            <ul id="rotation-list" class="simple-rank-list">
+              <li>Aún no hay compras registradas en el historial.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Histórico de consumo y compras recientes (RF-05) -->
+        <article class="dashboard-widget">
+          <h3>Historial Reciente de Remesas (Cierres de Compra)</h3>
+          <p class="widget-desc">Auditoría transaccional de abastecimientos realizados.</p>
+          <div class="table-responsive">
+            <table class="data-table" id="history-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Producto</th>
+                  <th>Cant.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <tr><td colspan="4" class="muted text-center">Sin transacciones registradas.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= SECCIÓN 4: CATÁLOGO BASE PREEXISTENTE ================= -->
+    <section id="catalogo" class="panel hidden">
+      <div class="panel-header">
+        <div>
+          <h2>Catálogo Preexistente (Dataset Canasta Básica Familiar)</h2>
+          <p class="muted">60 insumos estructurados con precios de referencia y vida útil estimada (RF-01, Sección 2).</p>
+        </div>
+        <div class="search-wrap">
+          <input type="text" id="catalog-search" placeholder="🔍 Filtrar catálogo…" autocomplete="off">
+        </div>
+      </div>
+      <div id="catalog-grid" class="catalog-grid">
+        <p class="loading-state">Cargando catálogo…</p>
+      </div>
     </section>
   </main>
-  <footer>SmartPantry · Frontend conectado a una API desplegada en una VM independiente</footer>
+
+  <!-- ================= MODAL: AGREGAR A LA DESPENSA (RF-02 / 3.1) ================= -->
+  <div id="modal-add-pantry" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-add-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-add-title">➕ Registrar Producto en la Despensa</h3>
+        <button type="button" class="modal-close" data-close-modal="modal-add-pantry" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-add-pantry">
+        <div class="form-group">
+          <label for="select-producto"><strong>Producto del Catálogo:</strong></label>
+          <select id="select-producto" required>
+            <option value="">Selecciona un producto preexistente…</option>
+          </select>
+          <small id="product-meta-preview" class="form-help"></small>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="input-stock-actual"><strong>Stock Actual:</strong></label>
+            <input type="number" id="input-stock-actual" min="0" step="0.5" value="1" required>
+            <small class="form-help">Cantidad física en alacena hoy</small>
+          </div>
+          <div class="form-group">
+            <label for="input-stock-minimo"><strong>Stock Mínimo (Seguridad):</strong></label>
+            <input type="number" id="input-stock-minimo" min="0.1" step="0.5" value="1" required>
+            <small class="form-help">Umbral para lista de compras</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-fecha-ingreso"><strong>Fecha de Adquisición / Ingreso:</strong></label>
+          <input type="date" id="input-fecha-ingreso" required>
+          <small class="form-help">Base para el cálculo predictivo de caducidad (RN-04)</small>
+        </div>
+
+        <div id="form-add-alert" class="form-alert hidden"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-add-pantry">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar en Despensa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EDITAR UMBRAL DE SEGURIDAD (ADMIN) ================= -->
+  <div id="modal-edit-pantry" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-edit-title">⚙️ Parametrizar Stock y Umbral</h3>
+        <button type="button" class="modal-close" data-close-modal="modal-edit-pantry" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="form-edit-pantry">
+        <input type="hidden" id="edit-item-id">
+        <h4 id="edit-product-name" style="margin: 0 0 16px; color: #173d32;">—</h4>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-stock-actual"><strong>Stock Actual:</strong></label>
+            <input type="number" id="edit-stock-actual" min="0" step="0.5" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-stock-minimo"><strong>Stock Mínimo de Seguridad:</strong></label>
+            <input type="number" id="edit-stock-minimo" min="0.1" step="0.5" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-fecha-ingreso"><strong>Fecha de Adquisición:</strong></label>
+          <input type="date" id="edit-fecha-ingreso" required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-edit-pantry">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Actualizar Parámetros</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones flotantes (Toasts) -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <footer>
+    <div class="footer-content">
+      <p><strong>SmartPantry</strong> · Arquitectura de Dos Servidores Desacoplados (Frontend Nginx <code>192.168.56.10</code> / Backend FastAPI <code>192.168.56.20:8000</code>)</p>
+      <p class="muted">Redes e Infraestructura · Fase 1 y 2 · Estudiantes: Christian Medina, Santiago Nieto</p>
+    </div>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>

@@ -20,7 +20,7 @@ class Catalogo(Base):
 
 
 class DespensaItem(Base):
-    __tablename__ = "despensa_items"
+    __tablename__ = "despensa_item"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     producto_id: Mapped[int] = mapped_column(ForeignKey("catalogo.id", ondelete="CASCADE"), nullable=False)
@@ -34,7 +34,7 @@ class DespensaItem(Base):
 
 
 class CompraHistorial(Base):
-    __tablename__ = "compras_historial"
+    __tablename__ = "remesa_historial"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     producto_id: Mapped[int] = mapped_column(ForeignKey("catalogo.id", ondelete="RESTRICT"), nullable=False)

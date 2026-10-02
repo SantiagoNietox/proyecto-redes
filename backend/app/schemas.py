@@ -63,7 +63,24 @@ class CompraRead(BaseModel):
     comprado_en: datetime
 
 
+class ConsumoRequest(BaseModel):
+    cantidad: float = Field(default=1.0, gt=0)
+
+
+class CompraConsolidadaItem(BaseModel):
+    item_id: int
+    cantidad: float = Field(gt=0)
+
+
+class CompraConsolidadaRequest(BaseModel):
+    items: list[CompraConsolidadaItem]
+
+
 class DashboardRead(BaseModel):
     gasto_estimado: float
     productos_criticos: int
+    productos_agotados: int
     proximos_a_vencer: list[dict]
+    gasto_por_categoria: dict[str, float]
+    mayor_rotacion: list[dict]
+    historico_compras: list[dict]

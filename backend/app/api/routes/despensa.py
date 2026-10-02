@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.models import Catalogo, DespensaItem
-from app.schemas import DespensaCreate, DespensaRead, DespensaUpdate
+from app.schemas import ConsumoRequest, DespensaCreate, DespensaRead, DespensaUpdate
 
 router = APIRouter(prefix="/despensa", tags=["Despensa"])
 
@@ -24,8 +24,32 @@ def listar_despensa(db: Session = Depends(get_db)):
 def agregar_item(payload: DespensaCreate, db: Session = Depends(get_db)):
     if db.get(Catalogo, payload.producto_id) is None:
         raise HTTPException(status_code=404, detail="Producto no encontrado en catálogo")
+
+    # Si el producto ya está en la despensa, incrementamos existencias y actualizamos umbral
+    existente = db.scalar(select(DespensaItem).where(DespensaItem.producto_id == payload.producto_id))
+    if existente:
+        existente.stock_actual += payload.stock_actual
+        existente.stock_minimo = payload.stock_minimo
+        existente.fecha_ingreso = payload.fecha_ingreso
+        existente.en_lista_compras = existente.stock_actual <= existente.stock_minimo
+        db.commit()
+        return _with_producto(db, existente.id)
+
     item = DespensaItem(**payload.model_dump(), en_lista_compras=payload.stock_actual <= payload.stock_minimo)
     db.add(item)
+    db.commit()
+    return _with_producto(db, item.id)
+
+
+@router.post("/{item_id}/consumir", response_model=DespensaRead)
+def consumir_item(item_id: int, payload: ConsumoRequest = None, db: Session = Depends(get_db)):
+    item = db.get(DespensaItem, item_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Item de despensa no encontrado")
+    cantidad = payload.cantidad if payload else 1.0
+    item.stock_actual = max(0.0, round(item.stock_actual - cantidad, 2))
+    # RN-01: Evaluación automática de stock de seguridad
+    item.en_lista_compras = item.stock_actual <= item.stock_minimo
     db.commit()
     return _with_producto(db, item.id)
 

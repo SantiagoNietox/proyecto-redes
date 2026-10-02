@@ -1,9 +1,61 @@
 id,nombre,categoria,unidad_medida,dias_caducidad_estimados,precio_referencia
-1,Arroz,Granos,kg,365,1.80
-2,Leche,Lácteos,l,10,1.25
-3,Huevos,Proteínas,unidad,28,0.25
-4,Pan,Panadería,unidad,5,0.80
-5,Frijoles,Granos,kg,365,2.10
-6,Tomate,Verduras,kg,7,1.50
-7,Aceite,Abarrotes,l,240,3.75
-8,Queso,Lácteos,kg,21,5.50
+1,Arroz Blanco 1kg,Granos y Cereales,Kilogramo,365,4800.00
+2,Frijol Bola Roja 500g,Granos y Cereales,Paquete,365,6500.00
+3,Lentejas 500g,Granos y Cereales,Paquete,365,4200.00
+4,Garbanzos 500g,Granos y Cereales,Paquete,365,4900.00
+5,Harina de Maiz precocida 1kg,Granos y Cereales,Kilogramo,180,4300.00
+6,Avena en Hojuelas 500g,Granos y Cereales,Paquete,180,3800.00
+7,Pasta Spaguetti 500g,Granos y Cereales,Paquete,365,3600.00
+8,Pasta Macarrones 250g,Granos y Cereales,Paquete,365,2200.00
+9,Leche Entera 1L,Lacteos,Litro,15,4600.00
+10,Huevos AA x30,Proteinas y Huevos,Unidad,28,18500.00
+11,Queso Campesino 500g,Lacteos,Gramo,20,9500.00
+12,Mantequilla con sal 250g,Lacteos,Gramo,60,7800.00
+13,Yogurt Vaso 1L,Lacteos,Litro,25,8200.00
+14,Crema de Leche 200ml,Lacteos,Unidad,45,3900.00
+15,Pechuga de Pollo 1kg,Carnes y Pollo,Kilogramo,5,16800.00
+16,Carne de Res Molida 500g,Carnes y Pollo,Gramo,4,14500.00
+17,Carne de Cerdo Chuleta 500g,Carnes y Pollo,Gramo,4,13200.00
+18,Muslos de Pollo 1kg,Carnes y Pollo,Kilogramo,5,11500.00
+19,Atun en Aceite Lata 170g,Despensa y Enlatados,Unidad,730,6900.00
+20,Sardinas en Tomate 425g,Despensa y Enlatados,Unidad,730,5800.00
+21,Salchicha Manguera 500g,Embutidos,Paquete,20,8900.00
+22,Jamon de Cerdo 250g,Embutidos,Paquete,15,7200.00
+23,Aceite Vegetal 900ml,Despensa y Enlatados,Litro,360,9800.00
+24,Azucar Blanca 1kg,Despensa y Enlatados,Kilogramo,365,4900.00
+25,Sal Refinada 1kg,Despensa y Enlatados,Kilogramo,730,2100.00
+26,Cafe Sello Rojo 500g,Bebidas y Despensa,Paquete,180,17500.00
+27,Chocolate en Pastilla 500g,Bebidas y Despensa,Paquete,365,7200.00
+28,Panela Cuadrada 1kg,Bebidas y Despensa,Kilogramo,365,5800.00
+29,Cebolla Cabezona Blanca 1kg,Frutas y Verduras,Kilogramo,12,3800.00
+30,Cebolla Larga / Junca Atado,Frutas y Verduras,Unidad,8,2500.00
+31,Tomate Chonto 1kg,Frutas y Verduras,Kilogramo,7,4200.00
+32,Papa Pastusa 1kg,Frutas y Verduras,Kilogramo,14,3600.00
+33,Papa Criolla 1kg,Frutas y Verduras,Kilogramo,8,4500.00
+34,Platano Maduro Unidad,Frutas y Verduras,Unidad,6,1800.00
+35,Platano Verde Unidad,Frutas y Verduras,Unidad,10,1800.00
+36,Zanahoria 1kg,Frutas y Verduras,Kilogramo,15,3100.00
+37,Ajo Cabeza Unidad,Frutas y Verduras,Unidad,30,1200.00
+38,Limon Comun 1kg,Frutas y Verduras,Kilogramo,14,4000.00
+39,Aguacate Hass Unidad,Frutas y Verduras,Unidad,5,3500.00
+40,Banano Unidad,Frutas y Verduras,Unidad,5,800.00
+41,Manzana Roja Unidad,Frutas y Verduras,Unidad,12,2800.00
+42,Cilantro Atado,Frutas y Verduras,Unidad,5,1500.00
+43,Pan Tajado Grande,Panaderia,Paquete,10,6800.00
+44,Galletas Saltinas Taco x3,Panaderia,Paquete,90,4500.00
+45,Salsa de Tomate Fruco 400g,Salsas y Condimentos,Unidad,180,5900.00
+46,Mayonesa Doypack 380g,Salsas y Condimentos,Unidad,180,6400.00
+47,Caldo de Gallina Cubos x12,Salsas y Condimentos,Paquete,365,3900.00
+48,Color / Azafran Sobres,Salsas y Condimentos,Paquete,365,2200.00
+49,Jabon de Bano Barra x3,Cuidado Personal,Paquete,730,9600.00
+50,Crema Dental 100ml,Cuidado Personal,Unidad,730,6800.00
+51,Champu Familiar 750ml,Cuidado Personal,Unidad,730,18900.00
+52,Papel Higienico x4 rollos,Aseo del Hogar,Paquete,730,7500.00
+53,Detergente en Polvo 1kg,Aseo del Hogar,Kilogramo,730,8900.00
+54,Blanqueador / Cloro 1L,Aseo del Hogar,Litro,365,3800.00
+55,Lavaloza Crema 500g,Aseo del Hogar,Gramo,365,4900.00
+56,Suavizante de Ropa 1L,Aseo del Hogar,Litro,365,7200.00
+57,Bolsas de Basura Negras x10,Aseo del Hogar,Paquete,730,5200.00
+58,Esponja para Platos x2,Aseo del Hogar,Paquete,365,3200.00
+59,Limpido / Desinfectante Pisos 1L,Aseo del Hogar,Litro,365,4500.00
+60,Servilletas de Cocina Rollo,Aseo del Hogar,Unidad,730,4200.00
